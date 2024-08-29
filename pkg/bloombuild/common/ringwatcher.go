@@ -58,7 +58,7 @@ func (w *RingWatcher) waitForInitialLeader(ctx context.Context) error {
 }
 
 func (w *RingWatcher) updateLoop(ctx context.Context) error {
-	w.waitForInitialLeader(ctx)
+	_ = w.waitForInitialLeader(ctx)
 
 	syncTicker := time.NewTicker(w.lookupPeriod)
 	defer syncTicker.Stop()
