@@ -97,8 +97,10 @@ func New(
 }
 
 func (b *Builder) starting(ctx context.Context) error {
-	if err := services.StartAndAwaitRunning(ctx, b.ringWatcher); err != nil {
-		return fmt.Errorf("error starting builder subservices: %w", err)
+	if b.ringWatcher != nil {
+		if err := services.StartAndAwaitRunning(ctx, b.ringWatcher); err != nil {
+			return fmt.Errorf("error starting builder subservices: %w", err)
+		}
 	}
 	b.metrics.running.Set(1)
 	return nil
@@ -107,8 +109,10 @@ func (b *Builder) starting(ctx context.Context) error {
 func (b *Builder) stopping(_ error) error {
 	defer b.metrics.running.Set(0)
 
-	if err := services.StopAndAwaitTerminated(context.Background(), b.ringWatcher); err != nil {
-		return fmt.Errorf("error stopping builder subservices: %w", err)
+	if b.ringWatcher != nil {
+		if err := services.StopAndAwaitTerminated(context.Background(), b.ringWatcher); err != nil {
+			return fmt.Errorf("error stopping builder subservices: %w", err)
+		}
 	}
 
 	if b.client != nil {

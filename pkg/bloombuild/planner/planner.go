@@ -128,7 +128,12 @@ func New(
 }
 
 func (p *Planner) isLeader() bool {
-	return p.ringWatcher != nil && p.ringWatcher.IsLeader()
+	if p.ringWatcher == nil {
+		// when the planner runs as standalone service in microserivce mode, then there is no ringWatcher
+		// therefore we can safely assume that the planner is a singleton
+		return true
+	}
+	return p.ringWatcher.IsLeader()
 }
 
 func (p *Planner) starting(ctx context.Context) (err error) {
