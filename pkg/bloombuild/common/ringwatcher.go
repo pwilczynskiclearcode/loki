@@ -82,7 +82,8 @@ func (w *RingWatcher) lookupAddresses() {
 		return
 	}
 
-	for _, inst := range rs.Instances {
+	for i := range rs.Instances {
+		inst := rs.Instances[i]
 		state, err := w.ring.GetInstanceState(inst.Id)
 		if err != nil || state != ring.ACTIVE {
 			return
