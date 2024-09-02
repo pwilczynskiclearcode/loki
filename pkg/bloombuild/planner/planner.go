@@ -159,7 +159,7 @@ func (p *Planner) stopping(_ error) error {
 func (p *Planner) running(ctx context.Context) error {
 	go p.trackInflightRequests(ctx)
 
-	// run once at beginning, but deplay by 1m to allow ring consolidation when running in SSD mode
+	// run once at beginning, but delay by 1m to allow ring consolidation when running in SSD mode
 	initialPlanningTimer := time.NewTimer(time.Minute)
 	defer initialPlanningTimer.Stop()
 
@@ -936,7 +936,7 @@ func (p *Planner) BuilderLoop(builder protos.PlannerForBuilder_BuilderLoopServer
 	logger := log.With(p.logger, "builder", builderID)
 
 	if !p.isLeader() {
-		return fmt.Errorf("planner is not leader")
+		return errPlannerIsNotLeader
 	}
 
 	level.Debug(logger).Log("msg", "builder connected")
